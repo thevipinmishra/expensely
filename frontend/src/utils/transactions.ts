@@ -6,6 +6,10 @@ export function getMonthlySummary(transactions: Transaction[]) {
   let expense = 0;
   let currency = "";
 
+  if (transactions.length === 0) {
+    return null;
+  }
+
   transactions.forEach((tx) => {
     const txDate = new Date(tx.createdAt);
     if (

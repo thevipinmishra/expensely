@@ -15,7 +15,7 @@ function RouteComponent() {
   return (
     <>
       <div className="container space-y-5">
-        {transactions && (
+        {transactions  ? (
           <div className="bg-teal-50/50 shadow-2xs grid gap-4 shadow-teal-50 backdrop-blur-sm relative  p-4 rounded-xl">
             <div className="flex">
               <p className="text-sm font-medium text-teal-900">
@@ -44,8 +44,8 @@ function RouteComponent() {
                 </p>
               </div>
             </div>
-          </div>
-        )}
+          </div> 
+        ) : null}
 
         <TransactionsList />
       </div>

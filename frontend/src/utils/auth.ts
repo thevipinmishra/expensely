@@ -8,12 +8,7 @@ export const useLogout = () => {
 
   return () => {
     clearToken();
-    queryClient.invalidateQueries({
-      queryKey: ["meta"],
-      exact: true,
-      type: "all",
-      refetchType: "none",
-    });
+    queryClient.clear();
     navigate({ to: "/login" });
   };
 };

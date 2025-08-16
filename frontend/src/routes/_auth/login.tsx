@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { FieldError } from "@/components/ui/field-error";
@@ -115,6 +115,7 @@ function RouteComponent() {
               Login
             </Button>
           </form>
+           <p className="text-sm font-medium">New here? <Link to='/signup' className="text-teal-800 underline">Create account</Link></p>
         </div>
       </div>
     </div>

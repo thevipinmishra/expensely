@@ -10,9 +10,12 @@ import {
   SelectLabel,
   SelectTrigger,
 } from "@/components/ui/select";
+import { signup } from "@/modules/auth/services";
 import { createListCollection } from "@ark-ui/react";
 import { useForm } from "@tanstack/react-form";
-import { createFileRoute } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 
 export const Route = createFileRoute("/_auth/signup")({
@@ -35,6 +38,22 @@ const signupSchema = z
   });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+  const signupMutation = useMutation({
+    mutationFn: (data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      password: string;
+      currency?: string;
+    }) => signup(data),
+    onSuccess: () => {
+      toast.success("Account created successfully! Please log in.");
+      navigate({
+        to: "/login",
+      });
+    },
+  });
   const currencyCollection = createListCollection({
     items: [
       { value: "CNY", label: "Chinese Yuan" },
@@ -59,7 +78,7 @@ function RouteComponent() {
       onChange: signupSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      signupMutation.mutate(value);
     },
   });
   return (
@@ -179,8 +198,12 @@ function RouteComponent() {
                 ))}
               </SelectContent>
             </Select>
-            <Button type="submit" className="w-full">
-              Login
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={signupMutation.isPending}
+            >
+              {signupMutation.isPending ? "Signing up..." : "Get Started"}
             </Button>
           </form>
         </div>

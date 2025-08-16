@@ -48,16 +48,18 @@ export const login = async ({
   return res;
 };
 
-export const singup = async ({
+export const signup = async ({
   firstName,
   lastName,
   email,
   password,
+  currency
 }: {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
+  currency?: string;
 }) => {
   const res = api
     .post<RegisterResponse>("auth/signup", {
@@ -66,6 +68,7 @@ export const singup = async ({
         lastName,
         email,
         password,
+        currency,
       },
     })
     .json();
