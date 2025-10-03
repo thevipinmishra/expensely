@@ -58,10 +58,19 @@ function RouteComponent() {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-rose-100 to-teal-100">
       <div className="container space-y-6">
-        <Title order={2}>
+        <Title order={2} ta={"center"}>
           Expensely
         </Title>
-        <Card shadow="sm" padding="lg" radius="md" className="space-y-4">
+        <Card
+          shadow="sm"
+          padding="lg"
+          maw={{
+            md: 480,
+          }}
+          mx={"auto"}
+          radius="md"
+          className="space-y-4"
+        >
           <Title order={4}>Login to your account</Title>
 
           <form

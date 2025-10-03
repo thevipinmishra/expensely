@@ -4,12 +4,13 @@ import {
   Card,
   PasswordInput,
   Select,
+  Text,
   TextInput,
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -76,8 +77,19 @@ function RouteComponent() {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-rose-100 to-teal-100">
       <div className="container py-8 space-y-6">
-        <Title order={2}>Expensely</Title>
-        <Card shadow="sm" padding="lg" radius="md" className="space-y-4">
+        <Title order={2} ta={"center"}>
+          Expensely
+        </Title>
+        <Card
+          shadow="sm"
+          padding="lg"
+          maw={{
+            md: 480,
+          }}
+          mx={"auto"}
+          radius="md"
+          className="space-y-4"
+        >
           <Title order={4}>Sign up for a new account</Title>
 
           <form
@@ -112,6 +124,15 @@ function RouteComponent() {
               {signupMutation.isPending ? "Signing up..." : "Get Started"}
             </Button>
           </form>
+          <Text>
+            Already have an account?
+            <Link
+              to="/login"
+              className="text-teal-800 inline-block ml-2 underline"
+            >
+              Login
+            </Link>
+          </Text>
         </Card>
       </div>
     </div>

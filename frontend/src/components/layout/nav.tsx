@@ -2,7 +2,7 @@ import { useMeta } from "@/modules/auth/services";
 import { Link } from "@tanstack/react-router";
 import { useLogout } from "@/utils/auth";
 import { Plus } from "lucide-react";
-import { Avatar, Button, Menu, Skeleton } from "@mantine/core";
+import { Avatar, Button, Menu, Skeleton, UnstyledButton } from "@mantine/core";
 
 export default function Nav() {
   const metaQuery = useMeta();
@@ -10,7 +10,7 @@ export default function Nav() {
   return (
     <nav className="sticky top-0 z-20 shadow-xs py-3 bg-white/80 backdrop-blur-sm">
       <div className="container flex items-center justify-between gap-6">
-        <Link to="/" className="text-sm font-semibold">
+        <Link to="/" className="text-lg font-semibold text-teal-800">
           Expensively
         </Link>
 
@@ -30,7 +30,7 @@ export default function Nav() {
           ) : (
             <Menu>
               <Menu.Target>
-                <Avatar> {metaQuery.data?.data.firstName.charAt(0)}</Avatar>
+                <Avatar component={UnstyledButton}>{metaQuery.data?.data.firstName.charAt(0)}</Avatar>
               </Menu.Target>
 
               <Menu.Dropdown>

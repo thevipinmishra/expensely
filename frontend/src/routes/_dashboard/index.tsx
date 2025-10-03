@@ -2,6 +2,7 @@ import TransactionsList from "@/components/transactions-list";
 import { useTransactions } from "@/modules/transactions/services";
 import { getMonthlySummary } from "@/utils/transactions";
 import { createFileRoute } from "@tanstack/react-router";
+import {FormatNumber} from '@ark-ui/react'
 
 export const Route = createFileRoute("/_dashboard/")({
   component: RouteComponent,
@@ -24,22 +25,22 @@ function RouteComponent() {
             <div className="flex gap-4 items-center">
               <div className="bg-red-200/50 text-red-900 p-2 rounded-lg flex-1">
                 <p>
-                  {/* <FormatNumber
+                  <FormatNumber
                     value={Number(transactions.expense)}
                     style="currency"
                     currency={transactions.currency}
                     minimumFractionDigits={0}
-                  /> */}
+                  />
                 </p>
               </div>
               <div className="bg-green-200/50 text-green-900 p-2 rounded-lg flex-1">
                 <p>
-                  {/* <FormatNumber
+                  <FormatNumber
                     value={Number(transactions.income)}
                     style="currency"
                     currency={transactions.currency}
                     minimumFractionDigits={0}
-                  /> */}
+                  />
                 </p>
               </div>
             </div>

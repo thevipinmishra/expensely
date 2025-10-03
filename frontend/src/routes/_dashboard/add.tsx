@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_dashboard/add")({
 const addTransactionSchema = z.object({
   type: z.enum(["income", "expense"]),
   about: z.string().min(1, "About is required"),
-  createdAt: z.date(),
+  createdAt: z.iso.date(),
   amount: z.number().min(0, "Amount must be a positive number"),
   category: z.string().min(1, "Category is required"),
   recurring: z.boolean(),
@@ -64,7 +64,7 @@ function RouteComponent() {
     initialValues: {
       type: "expense" as const,
       about: "",
-      createdAt: new Date(),
+      createdAt: new Date().toISOString().split("T")[0],
       amount: 0,
       category: "",
       recurring: false,
@@ -80,6 +80,7 @@ function RouteComponent() {
       console.log("Transaction added:", data);
     },
   });
+
   return (
     <div className="container">
       <form
@@ -100,7 +101,6 @@ function RouteComponent() {
         />
 
         <DatePickerInput label="Date" {...form.getInputProps("createdAt")} />
-
         <NumberInput label="Amount" min={0} {...form.getInputProps("amount")} />
 
         <Select

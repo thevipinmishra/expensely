@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ark-ui/react": "^5.25.1",
     "@fontsource-variable/dm-sans": "^5.2.8",
     "@mantine/charts": "^8.3.3",
     "@mantine/core": "^8.3.3",

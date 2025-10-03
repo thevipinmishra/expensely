@@ -9,9 +9,10 @@ export type Transaction = {
     userId: string;
     recurring?: "Daily" | "Weekly" | "Monthly" | "Yearly" | null | undefined;
     id?: string | undefined;
-    createdAt?: Date;
+    createdAt: string;
     type?: "income" | "expense" | undefined;
     notes?: string | null | undefined;
+    currency: string;
 }
 
 interface Transactions {

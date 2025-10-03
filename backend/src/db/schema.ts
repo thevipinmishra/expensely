@@ -5,6 +5,7 @@ import {
   boolean,
   pgEnum,
   numeric,
+  date,
 } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { createInsertSchema } from "drizzle-zod";
@@ -62,8 +63,8 @@ export const transactions = pgTable("transactions", {
     .primaryKey(),
   about: text("about").notNull(),
   type: transactionTypeEnum().default("expense").notNull(),
-  createdAt: timestamp("createdAt", {
-    withTimezone: true,
+  createdAt: date("createdAt", {
+    mode: "string",
   })
     .notNull()
     .defaultNow(),
