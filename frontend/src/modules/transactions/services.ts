@@ -2,25 +2,16 @@ import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import type { KyRequest } from "ky";
 
-export interface Transaction {
-  id: string;
-  about: string;
-  type: "expense" | "income";
-  amount: string;
-  category: [
-    "Food",
-    "Transport",
-    "Entertainment",
-    "Utilities",
-    "Health",
-    "Education",
-    "Other"
-  ];
-  recurring: "Daily" | "Weekly" | "Monthly" | "Yearly" | null;
-  notes: string | null;
-  userId: string;
-  currency: string;
-  createdAt: Date;
+export type Transaction = {
+    about: string;
+    amount: string;
+    category: string;
+    userId: string;
+    recurring?: "Daily" | "Weekly" | "Monthly" | "Yearly" | null | undefined;
+    id?: string | undefined;
+    createdAt?: Date;
+    type?: "income" | "expense" | undefined;
+    notes?: string | null | undefined;
 }
 
 interface Transactions {
@@ -32,6 +23,11 @@ export const getTransactions = async (params?: KyRequest) => {
   const res = await api.get<Transactions>("transactions", params).json();
   return res;
 };
+
+export const addTransaction = async (data: Partial<Transaction>) => {
+    const res = await api.post<Transaction>("transactions", { json: data }).json();
+    return res;
+}
 
 export const useTransactions = (params?: KyRequest) => {
   return useQuery({

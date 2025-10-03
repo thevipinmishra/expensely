@@ -1,15 +1,19 @@
-import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import { FieldError } from "@/components/ui/field-error";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/modules/auth/services";
 import { setToken } from "@/store";
 import { toast } from "sonner";
+import {
+  Button,
+  Card,
+  PasswordInput,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { zod4Resolver } from "mantine-form-zod-resolver";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
@@ -45,78 +49,45 @@ function RouteComponent() {
   });
 
   const form = useForm({
-    defaultValues: {
+    initialValues: {
       email: "",
       password: "",
     },
-    validators: {
-      onChange: loginSchema,
-    },
-    onSubmit: async ({ value }) => {
-      loginMutation.mutate(value);
-    },
+    validate: zod4Resolver(loginSchema),
   });
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-rose-100 to-teal-100">
       <div className="container space-y-6">
-        <h1 className="text-center font-bold text-xl text-teal-950">
+        <Title order={2}>
           Expensely
-        </h1>
-        <div className="bg-white/90 w-full max-w-md mx-auto space-y-6 backdrop-blur-md p-6 border border-teal-100 rounded-xl shadow-sm">
-          <h2 className="font-medium text-base tracking-tight text-gray-900">
-            Login to your account
-          </h2>
+        </Title>
+        <Card shadow="sm" padding="lg" radius="md" className="space-y-4">
+          <Title order={4}>Login to your account</Title>
 
           <form
             className="space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
+            onSubmit={form.onSubmit((values) => loginMutation.mutate(values))}
           >
-            <form.Field
-              name="email"
-              children={(field) => (
-                <Field
-                  invalid={
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  }
-                >
-                  <Label>Email</Label>
-                  <Input
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-                </Field>
-              )}
+            <TextInput label="Email" {...form.getInputProps("email")} />
+            <PasswordInput
+              label="Password"
+              {...form.getInputProps("password")}
             />
 
-            <form.Field
-              name="password"
-              children={(field) => (
-                <Field
-                  invalid={
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  }
-                >
-                  <Label>Password</Label>
-                  <Input
-                    type="password"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-                </Field>
-              )}
-            />
             <Button type="submit" className="w-full">
               Login
             </Button>
           </form>
-           <p className="text-sm font-medium">New here? <Link to='/signup' className="text-teal-800 underline">Create account</Link></p>
-        </div>
+          <Text>
+            New here?
+            <Link
+              to="/signup"
+              className="text-teal-800 inline-block ml-2 underline"
+            >
+              Create account
+            </Link>
+          </Text>
+        </Card>
       </div>
     </div>
   );

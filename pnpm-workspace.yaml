@@ -3,4 +3,5 @@ packages:
   - backend
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
+  - bcrypt
   - esbuild

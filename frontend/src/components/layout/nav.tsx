@@ -1,10 +1,8 @@
 import { useMeta } from "@/modules/auth/services";
 import { Link } from "@tanstack/react-router";
-import { Skeleton } from "../ui/skeleton";
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "../ui/menu";
 import { useLogout } from "@/utils/auth";
-import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
+import { Avatar, Button, Menu, Skeleton } from "@mantine/core";
 
 export default function Nav() {
   const metaQuery = useMeta();
@@ -17,24 +15,27 @@ export default function Nav() {
         </Link>
 
         <div className="flex gap-3 items-center">
-          <Button asChild>
-            <Link to="/add">
-              <Plus className="size-4" /> Add
-            </Link>
+          <Button
+            component={Link}
+            to="/add"
+            variant="outline"
+            size="sm"
+            leftSection={<Plus size={20} />}
+          >
+            Add
           </Button>
 
           {metaQuery.isLoading ? (
             <Skeleton className="size-9" />
           ) : (
             <Menu>
-              <MenuTrigger className="size-9 rounded-full outline-teal-200 bg-white/80 backdrop-blur-sm border border-teal-200 text-sm text-teal-900 font-semibold">
-                {metaQuery.data?.data.firstName.charAt(0)}
-              </MenuTrigger>
-              <MenuContent>
-                <MenuItem value="logout" onClick={logout}>
-                  Logout
-                </MenuItem>
-              </MenuContent>
+              <Menu.Target>
+                <Avatar> {metaQuery.data?.data.firstName.charAt(0)}</Avatar>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Menu.Item onClick={logout}>Logout</Menu.Item>
+              </Menu.Dropdown>
             </Menu>
           )}
         </div>

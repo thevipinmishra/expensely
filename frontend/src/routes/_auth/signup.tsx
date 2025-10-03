@@ -1,20 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
-import { FieldError } from "@/components/ui/field-error";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-} from "@/components/ui/select";
 import { signup } from "@/modules/auth/services";
-import { createListCollection } from "@ark-ui/react";
-import { useForm } from "@tanstack/react-form";
+import {
+  Button,
+  Card,
+  PasswordInput,
+  Select,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { zod4Resolver } from "mantine-form-zod-resolver";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -27,6 +23,7 @@ const signupSchema = z
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
     email: z.email("Invalid email address"),
+    currency: z.string().min(1, "Currency is required"),
     password: z.string().min(8, "Password must be at least 8 characters long"),
     confirmPassword: z
       .string()
@@ -54,150 +51,59 @@ function RouteComponent() {
       });
     },
   });
-  const currencyCollection = createListCollection({
-    items: [
-      { value: "CNY", label: "Chinese Yuan" },
-      { value: "INR", label: "Indian Rupee" },
-      { value: "EUR", label: "Euro" },
-      { value: "USD", label: "US Dollar" },
-      { value: "IDR", label: "Indonesian Rupiah" },
-      { value: "BRL", label: "Brazilian Real" },
-      { value: "PKR", label: "Pakistani Rupee" },
-      { value: "RUB", label: "Russian Ruble" },
-    ],
-  });
+  const currencyCollection = [
+    { value: "CNY", label: "Chinese Yuan" },
+    { value: "INR", label: "Indian Rupee" },
+    { value: "EUR", label: "Euro" },
+    { value: "USD", label: "US Dollar" },
+    { value: "IDR", label: "Indonesian Rupiah" },
+    { value: "BRL", label: "Brazilian Real" },
+    { value: "PKR", label: "Pakistani Rupee" },
+    { value: "RUB", label: "Russian Ruble" },
+  ];
+
   const form = useForm({
-    defaultValues: {
+    initialValues: {
       firstName: "",
       lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
+      currency: "",
     },
-    validators: {
-      onChange: signupSchema,
-    },
-    onSubmit: async ({ value }) => {
-      signupMutation.mutate(value);
-    },
+    validate: zod4Resolver(signupSchema),
   });
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-rose-100 to-teal-100">
       <div className="container py-8 space-y-6">
-        <h1 className="text-center font-bold text-xl text-teal-950">
-          Expensely
-        </h1>
-        <div className="bg-white/90 w-full max-w-md mx-auto space-y-6 backdrop-blur-md p-6 border border-teal-100 rounded-xl shadow-sm">
-          <h2 className="font-medium text-base tracking-tight text-gray-900">
-            Sign up for a new account
-          </h2>
+        <Title order={2}>Expensely</Title>
+        <Card shadow="sm" padding="lg" radius="md" className="space-y-4">
+          <Title order={4}>Sign up for a new account</Title>
 
           <form
             className="space-y-6"
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
+            onSubmit={form.onSubmit((values) => signupMutation.mutate(values))}
           >
-            <form.Field
-              name="firstName"
-              children={(field) => (
-                <Field
-                  invalid={
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  }
-                >
-                  <Label>First name</Label>
-                  <Input
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-                </Field>
-              )}
+            <TextInput
+              label="First name"
+              {...form.getInputProps("firstName")}
             />
-            <form.Field
-              name="lastName"
-              children={(field) => (
-                <Field
-                  invalid={
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  }
-                >
-                  <Label>Last name</Label>
-                  <Input
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-                </Field>
-              )}
+            <TextInput label="Last name" {...form.getInputProps("lastName")} />
+            <TextInput label="Email" {...form.getInputProps("email")} />
+            <PasswordInput
+              label="Password"
+              {...form.getInputProps("password")}
             />
-            <form.Field
-              name="email"
-              children={(field) => (
-                <Field
-                  invalid={
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  }
-                >
-                  <Label>Email</Label>
-                  <Input
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-                </Field>
-              )}
+            <PasswordInput
+              label="Confirm password"
+              {...form.getInputProps("confirmPassword")}
             />
-            <form.Field
-              name="password"
-              children={(field) => (
-                <Field
-                  invalid={
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  }
-                >
-                  <Label>Password</Label>
-                  <Input
-                    type="password"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-                </Field>
-              )}
+            <Select
+              label="Currency"
+              data={currencyCollection}
+              {...form.getInputProps("currency")}
             />
-            <form.Field
-              name="confirmPassword"
-              children={(field) => (
-                <Field
-                  invalid={
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  }
-                >
-                  <Label>Confirm password</Label>
-                  <Input
-                    type="password"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-                </Field>
-              )}
-            />
-            <Select collection={currencyCollection}>
-              <SelectLabel>Currency</SelectLabel>
-              <SelectTrigger />
-              <SelectContent>
-                {currencyCollection.items.map((currency) => (
-                  <SelectItem key={currency.value} item={currency}>
-                    {currency.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+
             <Button
               type="submit"
               className="w-full"
@@ -206,7 +112,7 @@ function RouteComponent() {
               {signupMutation.isPending ? "Signing up..." : "Get Started"}
             </Button>
           </form>
-        </div>
+        </Card>
       </div>
     </div>
   );

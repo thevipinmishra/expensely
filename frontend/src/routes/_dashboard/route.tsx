@@ -6,7 +6,6 @@ export const Route = createFileRoute("/_dashboard")({
   component: RouteComponent,
   beforeLoad: async ({ location }) => {
     const token = getToken();
-    console.log("Dashboard route beforeLoad", token);
     if (!token) {
       throw redirect({
         to: "/login",

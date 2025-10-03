@@ -1,7 +1,5 @@
 import { useTransactions } from "@/modules/transactions/services";
-import { Button } from "./ui/button";
-import { formatRelative } from "date-fns";
-import { FormatNumber } from "@ark-ui/react";
+import { Button } from "@mantine/core";
 
 export default function TransactionsList() {
   const transactionsQuery = useTransactions();
@@ -30,7 +28,7 @@ export default function TransactionsList() {
               <div className="bg-white/50 p-4 rounded-xl flex items-center">
                 <div className="space-y-1 flex-1">
                   <p className="text-[10px] tracking-wider text-teal-800 uppercase font-medium">
-                    {formatRelative(transaction.createdAt, new Date())}
+                    {/* {formatRelative(transaction.createdAt, new Date())} */}
                   </p>
                   <p className="text-base text-gray-900 font-semibold">
                     {transaction.about}
@@ -38,12 +36,12 @@ export default function TransactionsList() {
                 </div>
                 <p className="font-bold text-xl group-data-[type=expense]:text-red-700 tabular-nums">
                   {transaction.type === "expense" ? "-" : "+"}{" "}
-                  <FormatNumber
+                  {/* <FormatNumber
                     value={Number(transaction.amount)}
                     style="currency"
                     currency={transaction.currency}
                     minimumFractionDigits={0}
-                  />
+                  /> */}
                 </p>
               </div>
             </div>
