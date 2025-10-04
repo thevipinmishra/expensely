@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import "@fontsource-variable/dm-sans/index.css";
 import { Toaster } from "sonner";
 import "@mantine/core/styles.layer.css";
@@ -16,10 +16,13 @@ import {
   Button,
   createTheme,
   MantineProvider,
+  NumberInput,
   PasswordInput,
   Select,
+  Textarea,
   TextInput,
 } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 
 dayjs.extend(customParseFormat);
 
@@ -45,6 +48,21 @@ const theme = createTheme({
       },
     }),
     Select: Select.extend({
+      defaultProps: {
+        size: "md",
+      },
+    }),
+    DatePickerInput: DatePickerInput.extend({
+      defaultProps: {
+        size: "md",
+      },
+    }),
+    NumberInput: NumberInput.extend({
+      defaultProps: {
+        size: "md",
+      },
+    }),
+    Textarea: Textarea.extend({
       defaultProps: {
         size: "md",
       },

@@ -1,7 +1,7 @@
 import { useMeta } from "@/modules/auth/services";
 import { Link } from "@tanstack/react-router";
 import { useLogout } from "@/utils/auth";
-import { Plus } from "lucide-react";
+import { LogOut, Plus } from "lucide-react";
 import { Avatar, Button, Menu, Skeleton, UnstyledButton } from "@mantine/core";
 
 export default function Nav() {
@@ -30,11 +30,15 @@ export default function Nav() {
           ) : (
             <Menu>
               <Menu.Target>
-                <Avatar component={UnstyledButton}>{metaQuery.data?.data.firstName.charAt(0)}</Avatar>
+                <Avatar color="teal" component={UnstyledButton}>{metaQuery.data?.data.firstName.charAt(0)}</Avatar>
               </Menu.Target>
 
               <Menu.Dropdown>
-                <Menu.Item onClick={logout}>Logout</Menu.Item>
+                <Menu.Label>
+                    {metaQuery.data?.data.firstName} {metaQuery.data?.data.lastName}
+                </Menu.Label>
+                <Menu.Divider />
+                <Menu.Item color="teal" onClick={logout} leftSection={<LogOut className="size-4" />}>Logout</Menu.Item>
               </Menu.Dropdown>
             </Menu>
           )}

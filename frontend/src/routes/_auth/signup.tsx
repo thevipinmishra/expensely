@@ -17,22 +17,53 @@ import { z } from "zod";
 
 export const Route = createFileRoute("/_auth/signup")({
   component: RouteComponent,
+  head: () => ({
+    meta: [
+      {
+        title: "Sign Up - Expensely",
+      },
+    ],
+  }),
 });
 
 const signupSchema = z
   .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    email: z.email("Invalid email address"),
-    currency: z.string().min(1, "Currency is required"),
-    password: z.string().min(8, "Password must be at least 8 characters long"),
+    firstName: z
+      .string()
+      .min(1, "First name is required")
+      .min(2, "First name must be at least 2 characters")
+      .max(50, "First name is too long")
+      .regex(/^[a-zA-Z\s]+$/, "First name can only contain letters")
+      .trim(),
+    lastName: z
+      .string()
+      .min(1, "Last name is required")
+      .min(2, "Last name must be at least 2 characters")
+      .max(50, "Last name is too long")
+      .regex(/^[a-zA-Z\s]+$/, "Last name can only contain letters")
+      .trim(),
+    email: z
+      .string()
+      .min(1, "Email is required")
+      .email("Please enter a valid email address")
+      .trim()
+      .toLowerCase(),
+    currency: z
+      .string()
+      .min(1, "Please select your preferred currency")
+      .length(3, "Invalid currency code"),
+    password: z
+      .string()
+      .min(1, "Password is required")
+      .min(6, "Password must be at least 6 characters")
+      .max(128, "Password is too long"),
     confirmPassword: z
       .string()
-      .min(8, "Confirm password must be at least 8 characters long"),
+      .min(1, "Please confirm your password"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
-    message: "Passwords must match",
+    message: "Passwords do not match",
   });
 
 function RouteComponent() {
@@ -46,21 +77,29 @@ function RouteComponent() {
       currency?: string;
     }) => signup(data),
     onSuccess: () => {
-      toast.success("Account created successfully! Please log in.");
+      toast.success("Account created successfully! Please sign in to continue.");
       navigate({
         to: "/login",
       });
     },
+    onError: (error) => {
+      console.error("Signup error:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to create account. Please try again."
+      );
+    },
   });
   const currencyCollection = [
-    { value: "CNY", label: "Chinese Yuan" },
-    { value: "INR", label: "Indian Rupee" },
-    { value: "EUR", label: "Euro" },
-    { value: "USD", label: "US Dollar" },
-    { value: "IDR", label: "Indonesian Rupiah" },
-    { value: "BRL", label: "Brazilian Real" },
-    { value: "PKR", label: "Pakistani Rupee" },
-    { value: "RUB", label: "Russian Ruble" },
+    { value: "USD", label: "USD - US Dollar" },
+    { value: "EUR", label: "EUR - Euro" },
+    { value: "GBP", label: "GBP - British Pound" },
+    { value: "INR", label: "INR - Indian Rupee" },
+    { value: "CAD", label: "CAD - Canadian Dollar" },
+    { value: "AUD", label: "AUD - Australian Dollar" },
+    { value: "JPY", label: "JPY - Japanese Yen" },
+    { value: "CNY", label: "CNY - Chinese Yuan" },
   ];
 
   const form = useForm({
@@ -70,7 +109,7 @@ function RouteComponent() {
       email: "",
       password: "",
       confirmPassword: "",
-      currency: "",
+      currency: "USD",
     },
     validate: zod4Resolver(signupSchema),
   });
@@ -82,55 +121,87 @@ function RouteComponent() {
         </Title>
         <Card
           shadow="sm"
-          padding="lg"
+          padding="xl"
           maw={{
             md: 480,
           }}
           mx={"auto"}
           radius="md"
-          className="space-y-4"
+          className="space-y-6"
         >
-          <Title order={4}>Sign up for a new account</Title>
+          <Title order={4} className="text-center">Create Your Account</Title>
 
           <form
             className="space-y-6"
             onSubmit={form.onSubmit((values) => signupMutation.mutate(values))}
           >
-            <TextInput
-              label="First name"
-              {...form.getInputProps("firstName")}
+            <div className="grid grid-cols-2 gap-4">
+              <TextInput
+                label="First name"
+                placeholder="Enter your first name"
+                autoComplete="given-name"
+                disabled={signupMutation.isPending}
+                {...form.getInputProps("firstName")}
+              />
+              <TextInput 
+                label="Last name" 
+                placeholder="Enter your last name"
+                autoComplete="family-name"
+                disabled={signupMutation.isPending}
+                {...form.getInputProps("lastName")} 
+              />
+            </div>
+            
+            <TextInput 
+              label="Email" 
+              placeholder="Enter your email address"
+              type="email"
+              autoComplete="email"
+              disabled={signupMutation.isPending}
+              {...form.getInputProps("email")} 
             />
-            <TextInput label="Last name" {...form.getInputProps("lastName")} />
-            <TextInput label="Email" {...form.getInputProps("email")} />
+            
+            <Select
+              label="Preferred Currency"
+              placeholder="Select your currency"
+              data={currencyCollection}
+              searchable
+              disabled={signupMutation.isPending}
+              {...form.getInputProps("currency")}
+            />
+            
             <PasswordInput
               label="Password"
+              placeholder="Create a password"
+              autoComplete="new-password"
+              disabled={signupMutation.isPending}
               {...form.getInputProps("password")}
             />
+            
             <PasswordInput
-              label="Confirm password"
+              label="Confirm Password"
+              placeholder="Confirm your password"
+              autoComplete="new-password"
+              disabled={signupMutation.isPending}
               {...form.getInputProps("confirmPassword")}
-            />
-            <Select
-              label="Currency"
-              data={currencyCollection}
-              {...form.getInputProps("currency")}
             />
 
             <Button
               type="submit"
               className="w-full"
+              loading={signupMutation.isPending}
               disabled={signupMutation.isPending}
             >
-              {signupMutation.isPending ? "Signing up..." : "Get Started"}
+              {signupMutation.isPending ? "Creating Account..." : "Create Account"}
             </Button>
           </form>
-          <Text>
-            Already have an account?
+          <Text ta="center" size="sm" c="dimmed">
+            Already have an account?{" "}
             <Link
               to="/login"
-              className="text-teal-800 inline-block ml-2 underline"
+              className="text-teal-600 hover:text-teal-800 underline font-medium"
             >
-              Login
+              Sign in here
             </Link>
           </Text>
         </Card>

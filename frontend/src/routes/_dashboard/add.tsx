@@ -23,6 +23,13 @@ import { useMeta } from "@/modules/auth/services";
 
 export const Route = createFileRoute("/_dashboard/add")({
   component: RouteComponent,
+  head: () => ({
+    meta: [
+      {
+        title: "Add Transaction - Expensely",
+      },
+    ],
+  }),
 });
 
 const addTransactionSchema = z
@@ -77,7 +84,7 @@ const addTransactionSchema = z
 
 function RouteComponent() {
   const navigate = useNavigate();
-    const metaQuery = useMeta();
+  const metaQuery = useMeta();
   const queryClient = useQueryClient();
   const categories = [
     "Food",
@@ -125,7 +132,7 @@ function RouteComponent() {
       createdAt: new Date().toISOString().split("T")[0],
       amount: 0,
       category: "",
-      currency: metaQuery?.data?.data.currency || '',
+      currency: metaQuery?.data?.data.currency || "",
       recurring: false,
       period: "",
       notes: "",
@@ -153,7 +160,7 @@ function RouteComponent() {
   });
 
   return (
-    <div className="container">
+    <div className="container max-w-3xl">
       <form
         className="p-5 bg-white rounded-xl shadow-sm space-y-6"
         onSubmit={form.onSubmit(handleAddTransaction)}
