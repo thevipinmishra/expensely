@@ -22,7 +22,6 @@ export const api = ky.create({
       async (_request, _options, response) => {
         if (response.status === 401) {
           clearToken();
-          // Use router navigation if possible, else hard reload
           window.location.href = "/login";
         }
       },

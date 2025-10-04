@@ -1,5 +1,5 @@
 import { useTransactions } from "@/modules/transactions/services";
-import { FormatNumber } from "@ark-ui/react";
+import { formatCurrency } from "@/utils/currency-formatter";
 import { Button } from "@mantine/core";
 
 export default function TransactionsList() {
@@ -35,14 +35,12 @@ export default function TransactionsList() {
                     {transaction.about}
                   </p>
                 </div>
-                <p className="font-bold text-xl group-data-[type=expense]:text-red-700 tabular-nums">
+                <p className="font-bold text-xl group-data-[type=expense]:text-red-700 group-data-[type=income]:text-green-700 tabular-nums">
                   {transaction.type === "expense" ? "-" : "+"}{" "}
-                  <FormatNumber
-                    value={Number(transaction.amount)}
-                    style="currency"
-                    currency={transaction.currency}
-                    minimumFractionDigits={0}
-                  />
+                  {formatCurrency(
+                    Number(transaction.amount),
+                    transaction.currency
+                  )}
                 </p>
               </div>
             </div>
